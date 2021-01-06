@@ -48,3 +48,22 @@
     ```jsx
     nestedQueryBuilder.innerHit(new InnerHitBuilder());
     ```
+ - sort
+    - FieldSortBuilder / GeoDistanceSortBuilder / ScoreSortBuilder / ScriptSortBuilder
+- scriptField
+    - 미쳐 정의하지 못한 필드나 특정 상황에서 일부 데이터를 결합하여 하나의 필드로 처리하고자 할 때에 사용
+    - `scriptField({NEW_FIELD_NAME}, {SCRIPT})`
+    - 스크립트 표현 참조
+    [https://www.elastic.co/guide/en/elasticsearch/reference/2.3/modules-scripting.html](https://www.elastic.co/guide/en/elasticsearch/reference/2.3/modules-scripting.html)
+- fetchSource
+    - 소스 필터링
+    - wildCard
+
+    ```
+    String[] includeFields = new String[] {"{FIELD_NAME1}", "{FIELD_NAME2.*}"};
+    String[] excludeFields = new String[] {"{FIELD_NAME3}"};
+    sourceBuilder.fetchSource(includeFields, excludeFields);
+    ```
+
+- from
+- size
