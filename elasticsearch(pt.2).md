@@ -68,7 +68,7 @@
 - from
 - size
 
-    ```
+    ```jsx
     
 EX)
 
