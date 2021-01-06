@@ -67,3 +67,52 @@
 
 - from
 - size
+
+    ```
+    
+EX)
+
+SearchRequest searchRequest = new SearchRequest({INDEX_NAME});
+
+SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+
+searchSourceBuilder.from({OFFSET});
+searchSourceBuilder.size({LIMIT});
+
+searchSourceBuilder.sort(new GeoDistanceSortBuilder({FIELD_NAME}, {LATITUDE}, {LONGITUDE}).order(org.elasticsearch.search.sort.SortOrder.DESC));
+//searchSourceBuilder.sort(new FieldSortBuilder({FIELD_NAME}).order({SORT_ORDER}));
+//searchSourceBuilder.sort(new ScoreSortBuilder().order({SORT_ORDER}));    
+
+BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
+
+boolQueryBuilder.filter(QueryBuilders.existsQuery({FIELD_NAME});
+
+boolQueryBuilder.filter(QueryBuilders.matchQuery({FIELD_NAME},{KEY_WORD}));
+
+boolQueryBuilder.filter(QueryBuilders.rangeQuery({FIELD_NAME}).lte(OffsetDateTime.now()));
+
+boolQueryBuilder.filter(QueryBuilders.termsQuery({FIELD_NAME},{[KEY_WORDS]}));
+
+boolQueryBuilder.should(QueryBuilders.geoDistanceQuery({FIELD_NAME}).distance(5.0, DistanceUnit.KILOMETERS).point({LATITUDE}, {LONGITUDE}));
+
+boolQueryBuilder.should(QueryBuilders.geoBoundingBoxQuery({FIELD_NAME}).setCorners({TOP}, {LEFT}, {BOTTOM}, {RIGHT});
+
+searchSourceBuilder.query(boolQueryBuilder);
+
+Map<String, Object> params = new HashMap<>();
+params.put("lat", {LATITUDE});
+params.put("lon", {LONGITUDE});
+searchSourceBuilder.scriptField({NEW_FIELD_NAME}, new Script(ScriptType.INLINE, "painless", "doc['{FIELD_NAME}'].arcDistance(params.lat, params.lon)", params));
+
+
+BoolQueryBuilder innerBoolQueryBuilder = new BoolQueryBuilder();
+innerBoolQueryBuilder.filter(QueryBuilders.termQuery({NESTED_FIELD_NAME}, {NESTED_KEYWORD}));
+NestedQueryBuilder nestedQueryBuilder = new NestedQueryBuilder({PATH}, innerBoolQueryBuilder, ScoreMode.None);
+boolQueryBuilder.filter(nestedQueryBuilder);
+
+
+String[] excludeFields = new String[] {[EXCLUDE_FIELDS]};
+searchSourceBuilder.fetchSource(null, excludeFields);
+
+searchRequest.source(searchSourceBuilder);
+    ```
